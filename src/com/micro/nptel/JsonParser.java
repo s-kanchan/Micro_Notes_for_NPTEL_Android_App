@@ -49,6 +49,12 @@ public class JsonParser {
 				Log.i("_JSON_PARSER_", "Cont :" + cont);
 				
 				//for(int j=0;j<)
+				if(i == 0)
+					ret_json_objs.add(json_root.getJSONObject(i));
+				else
+				{
+					
+				}
 			}
 			//Log.i("_JSON_PARSER_", "JsonArrayCreated");
 		} catch (JSONException e) {

@@ -12,14 +12,34 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.media.MediaRouter.VolumeCallback;
 import android.util.Log;
 
 public class JsonParser {
 	
+	ArrayList<JSONObject> notes_object;
 	String video_file;
 	String json_files[]; 
 	Context app_context;
 	FileHandler file_handler;
+	
+	public int convertToSeconds(String time_str)
+	{
+		//Converter to be used if time is in format "min:sec" eg: 01:10 
+		int time_int = 0;
+		if(time_str.contains(":"))
+		{
+			String[] parts = time_str.split(":");
+			int min = Integer.parseInt(parts[0].toString());
+			int sec = Integer.parseInt(parts[1].toString());
+			
+			time_int = (min*60) + sec;
+			
+			Log.i("_CONVERTER_VAL : ", String.valueOf(time_int));
+		}
+		
+		return time_int;
+	}
 	
 	public JsonParser(Context context, String vid_file)
 	{
@@ -27,12 +47,28 @@ public class JsonParser {
 		app_context = context;
 		file_handler = new FileHandler(context);
 		nameJsonFiles();
-		getNotes();
+		notes_object = getNotes();
+		///////////////// Remove this ///////////
+		Log.i("_JSON_PARSER_", "End of constructor");
+		for(int i = 0 ; i < notes_object.size(); i++)
+		{
+			try {
+				Log.i("_JSON_PARSE_ notes : ", String.valueOf(convertToSeconds(notes_object.get(i).getString("note_time"))));
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+		
+		/////////////////////////////////////////
+		
 	}
 
 	private ArrayList<JSONObject> getNotes() {
 		String file;
 		String json;
+		int added_already;
 		ArrayList<JSONObject> ret_json_objs = new ArrayList<JSONObject>();
 		file = json_files[0];
 		Log.i("_JSON_PARSER_", "FILE_NAME :"+file);
@@ -41,19 +77,37 @@ public class JsonParser {
 		
 		try {
 			JSONArray json_root = new JSONArray(json);
-			JSONObject[] json_objs = new JSONObject[json_root.length()];
+			//JSONObject[] json_objs = new JSONObject[json_root.length()];
+			JSONObject obj;
+			JSONObject ret_obj = null;  //Careful about this null 
+			
 			for (int i=0;i<json_root.length();i++)
 			{
-				json_objs[i] = json_root.getJSONObject(i);
-				String cont = json_objs[i].getString("content");
-				Log.i("_JSON_PARSER_", "Cont :" + cont);
-				
-				//for(int j=0;j<)
+				//json_objs[i] = json_root.getJSONObject(i);
+				//String cont = json_objs[i].getString("content");
+				//Log.i("_JSON_PARSER_", "Cont :" + cont);
+				obj = json_root.getJSONObject(i);
+				added_already = 0;
 				if(i == 0)
-					ret_json_objs.add(json_root.getJSONObject(i));
+					ret_json_objs.add(obj);
 				else
 				{
+					for(int j =0; j< ret_json_objs.size();j++)
+					{
+						ret_obj = ret_json_objs.get(j);
+						if( convertToSeconds(obj.getString("note_time")) < convertToSeconds(ret_obj.getString("note_time")) )
+						{
+							ret_json_objs.add(j, obj);
+							added_already = 1;
+							break;
+						}
+					}
 					
+					if (added_already == 0)
+					{
+						Log.i("_ADDED_ALREADY_", "adding outside for");
+						ret_json_objs.add(obj);
+					}
 				}
 			}
 			//Log.i("_JSON_PARSER_", "JsonArrayCreated");

@@ -1,5 +1,7 @@
 package com.micro.nptel;
 
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -23,6 +25,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -32,6 +35,7 @@ public class Home extends Activity implements OnTouchListener{
 	ImageView author_pic;
 	VideoStatus video_status = null;
 	JsonParser json_parser;
+	int note_index;
 	MediaController mediacontroller;
 	//String VideoURL = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
 	String VideoURL;
@@ -42,7 +46,8 @@ public class Home extends Activity implements OnTouchListener{
 	//private GestureListener gd;
 	
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected void onCreate(Bundle savedInstanceState) 
+	{
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		
@@ -57,6 +62,7 @@ public class Home extends Activity implements OnTouchListener{
 		Bundle bundle = getIntent().getExtras();
 		VideoURL = bundle.getString("video");
 		json_parser = new JsonParser(getBaseContext(), VideoURL);
+		note_index = 0;
 		//final VideoView videoView = (VideoView) findViewById(R.id.nptel_video);
 		videoView = (VideoView) findViewById(R.id.nptel_video);
 		author_pic = (ImageView) findViewById(R.id.author_pic);
@@ -77,26 +83,32 @@ public class Home extends Activity implements OnTouchListener{
             public void run() 
             {
                 int pos = videoView.getCurrentPosition();
-                if(pos >=3000 && pos<3500)
+           
+                ///////////////// Displaying notes as pic /////////////
+                if(note_index < json_parser.notes_object.size())
                 {
-                    Home.this.showMicronotes();
-                	toast.setText("Reached 3 seconds");
-                   toast.show();
-                 }
-                else if(pos >=7000 && pos<7500)
-                {
-                	Home.this.showMicronotes();
-                	toast.setText("Reached 7 seconds");
-                   toast.show();
-                 }
-                else
-                {
-                	video_status.note_timer--;
-                	if(video_status.note_timer == 0)
-                		Home.this.hideMicronotes();
+	                int note_time = -1;
+					try 
+					{
+						note_time = json_parser.convertToSeconds(json_parser.notes_object.get(note_index).getString("note_time") );
+					} 
+					catch (JSONException e) 
+					{
+						e.printStackTrace();
+					}
+	                note_time = note_time * 1000;
+	                if(pos >= note_time && pos < (note_time + 5000))
+	                {
+	                	Home.this.showMicronotes();
+	                	note_index++;
+	                }
                 }
-                	
-                //toast.show();
+               
+            	video_status.note_timer--;
+            	if(video_status.note_timer == 0)
+            		Home.this.hideMicronotes();                	
+                /////////// ENDS ///////////////////////////
+            	
                 handler.postDelayed(this, 250);
             }
         };
@@ -123,7 +135,6 @@ public class Home extends Activity implements OnTouchListener{
             Log.e("Error", e.getMessage());
             e.printStackTrace();
         }
-        
 
 		//Uri video = Uri.parse("http://download.blender.org/durian/trailer/sintel_trailer-480p.mp4");
 		//videoView.start();
@@ -135,8 +146,6 @@ public class Home extends Activity implements OnTouchListener{
                 handler.postDelayed(r, 250);
             }
         });
-		
-		
 	}
 
 	@Override
@@ -205,52 +214,6 @@ public class Home extends Activity implements OnTouchListener{
 		
 	}  
 	
-	//////////////////////// CLASS GestureListener ///////////////
-	class GestureListener extends SimpleOnGestureListener{
-	       
-        private static final int SWIPE_MIN_DISTANCE = 120;
-        private static final int SWIPE_THRESHOLD_VELOCITY = 200;
-       
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, 
-                                        float velocityX, float velocityY) {
-           
-            if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && 
-                         Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-            	Toast.makeText(Home.this,"Right to left", Toast.LENGTH_SHORT).show();
-                //From Right to Left
-                return true;
-            }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE &&
-                         Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                //From Left to Right
-            	Toast.makeText(Home.this,"left to right", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-           
-            if(e1.getY() - e2.getY() > SWIPE_MIN_DISTANCE && 
-                        Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-                //From Bottom to Top
-            	Toast.makeText(Home.this,"Bottom to top", Toast.LENGTH_SHORT).show();
-                return true;
-            }  else if (e2.getY() - e1.getY() > SWIPE_MIN_DISTANCE && 
-                        Math.abs(velocityY) > SWIPE_THRESHOLD_VELOCITY) {
-                //From Top to Bottom
-            	Toast.makeText(Home.this,"Top to bottom", Toast.LENGTH_SHORT).show();
-                return true;
-            }
-            return false;
-        }
-        @Override
-        public boolean onDown(MotionEvent e) {
-            //always return true since all gestures always begin with onDown and<br>
-            //if this returns false, the framework won't try to pick up onFling for example.
-            return true;
-        }
-    }
-////////////////////////CLASS GestureListener ENDS ///////////////
-	
-	
-	
 
 	public void onRightToLeftSwipe(){
 	    Log.i(logTag, "RightToLeftSwipe!");
@@ -298,6 +261,18 @@ public class Home extends Activity implements OnTouchListener{
 		 final Dialog dialog = new Dialog(Home.this);
          dialog.setContentView(R.layout.dialog_notes);
          dialog.setTitle("Note");
+         
+         String note_txt = "";
+         try 
+         {
+			note_txt = json_parser.notes_object.get(note_index-1).getString("content");
+			Log.i("__HOME__", "NOTE : "+note_txt);
+         } 
+         catch (JSONException e) 
+         {
+        	 e.printStackTrace();
+         }
+         //disp_note.setText(note_txt);
          dialog.setCancelable(true);
          dialog.setOnDismissListener(new OnDismissListener() {
 			
@@ -308,8 +283,9 @@ public class Home extends Activity implements OnTouchListener{
 				
 				
 			}
-		});
-         
+         });
+         TextView disp_note = (TextView) dialog.findViewById(R.id.display_note);
+         disp_note.setText(note_txt);
          Button button = (Button) dialog.findViewById(R.id.dialog_cancel);
          button.setOnClickListener(new OnClickListener() {
          @Override

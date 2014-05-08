@@ -10,15 +10,20 @@
  <ScrollView android:id="@+id/ScrollView01"
  android:layout_width="wrap_content" android:layout_below="@+id/img_dialog"
  android:layout_centerHorizontal="true"
- android:layout_height="200dp">
+ android:layout_height="150dp">
  
  <TextView android:id="@+id/display_note"
  android:layout_width="wrap_content" android:layout_height="wrap_content"
  android:text="@string/sample_note" />
  
  </ScrollView>
+ <TextView android:id="@+id/display_link"
+ android:layout_width="wrap_content" android:layout_height="wrap_content"
+ android:layout_below="@id/ScrollView01"
+ android:layout_centerHorizontal="true"
+ android:text="@string/sample_note" />
 
- <Button android:id="@+id/dialog_cancel" android:layout_below="@id/ScrollView01"
+ <Button android:id="@+id/dialog_cancel" android:layout_below="@id/display_link"
  android:layout_width="wrap_content" android:layout_height="wrap_content"
  android:layout_centerHorizontal="true" android:text="Cancel" />
  

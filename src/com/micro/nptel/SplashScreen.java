@@ -19,7 +19,7 @@ public class SplashScreen extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-		setContentView(R.layout.activity_splash_screen);
+		setContentView(R.layout.old_activity_splash_screen);
 		
 		Thread splashTread = new Thread() {
             @Override

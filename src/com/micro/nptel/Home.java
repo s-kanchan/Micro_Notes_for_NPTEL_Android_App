@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
+import android.media.MediaPlayer.OnSeekCompleteListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +26,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
@@ -142,6 +144,29 @@ public class Home extends Activity implements OnTouchListener{
         videoView.setOnPreparedListener(new OnPreparedListener() {
             // Close the progress bar and play the video
             public void onPrepared(MediaPlayer mp) {
+            	mp.setOnSeekCompleteListener(new OnSeekCompleteListener() {
+            		@Override
+					public void onSeekComplete(MediaPlayer mp) {
+						// RESET note_index after a seek
+            			int curr_time = videoView.getCurrentPosition();
+            			int note_time = 0;
+            			note_index = 0;
+            			while(note_index < json_parser.notes_object.size())
+            			{
+	            			try {
+								note_time = json_parser.convertToSeconds(json_parser.notes_object.get(note_index).getString("note_time") );
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+	            			note_time = note_time * 1000;
+	            			if( note_time > curr_time)
+	            				break;
+	            			note_index++;
+            			}
+						
+					}
+				});
                 videoView.start();
                 handler.postDelayed(r, 250);
             }

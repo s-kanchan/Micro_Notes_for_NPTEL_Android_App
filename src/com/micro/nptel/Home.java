@@ -288,9 +288,13 @@ public class Home extends Activity implements OnTouchListener{
          dialog.setTitle("Note");
          
          String note_txt = "";
+         String ext_link = "";
+         String note_type = "";
          try 
          {
 			note_txt = json_parser.notes_object.get(note_index-1).getString("content");
+			ext_link = "Follow : " + json_parser.notes_object.get(note_index-1).getString("ext_links");	
+			note_type = json_parser.notes_object.get(note_index-1).getString("note_type");
 			Log.i("__HOME__", "NOTE : "+note_txt);
          } 
          catch (JSONException e) 
@@ -310,8 +314,29 @@ public class Home extends Activity implements OnTouchListener{
 			}
          });
          TextView disp_note = (TextView) dialog.findViewById(R.id.display_note);
+         TextView disp_qtn = (TextView) dialog.findViewById(R.id.display_qtn);
+         TextView disp_option1 = (TextView) dialog.findViewById(R.id.display_option1);
+         TextView disp_option2 = (TextView) dialog.findViewById(R.id.display_option2);
+         TextView disp_option3 = (TextView) dialog.findViewById(R.id.display_option3);
+         TextView disp_option4 = (TextView) dialog.findViewById(R.id.display_option4);
          disp_note.setText(note_txt);
+         TextView disp_link = (TextView) dialog.findViewById(R.id.display_link);
+         disp_link.setText(ext_link);
          Button button = (Button) dialog.findViewById(R.id.dialog_cancel);
+         
+         if(note_type.equalsIgnoreCase("mcq"))
+         {
+        	 
+         }
+         else
+         {
+        	 disp_qtn.setVisibility(View.INVISIBLE);
+        	 disp_option1.setVisibility(View.INVISIBLE);
+        	 disp_option2.setVisibility(View.INVISIBLE);
+        	 disp_option3.setVisibility(View.INVISIBLE);
+        	 disp_option4.setVisibility(View.INVISIBLE);
+         }
+         
          button.setOnClickListener(new OnClickListener() {
          @Override
              public void onClick(View v) {

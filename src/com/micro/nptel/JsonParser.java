@@ -71,6 +71,12 @@ public class JsonParser {
 		int added_already;
 		ArrayList<JSONObject> ret_json_objs = new ArrayList<JSONObject>();
 		file = json_files[0];
+		File file_obj = new File(file);
+		if(!file_obj.isFile())
+		{
+			Log.i("_JSON_PARSER_", "FILE NOT EXISTS");
+			return ret_json_objs;
+		}
 		Log.i("_JSON_PARSER_", "FILE_NAME :"+file);
 		json = loadJSON(file);
 		Log.i("_JSON_PARSER_", "JSON_STR :"+json);

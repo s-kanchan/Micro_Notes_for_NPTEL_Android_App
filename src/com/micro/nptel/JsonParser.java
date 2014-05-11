@@ -35,7 +35,7 @@ public class JsonParser {
 			
 			time_int = (min*60) + sec;
 			
-			Log.i("_CONVERTER_VAL : ", String.valueOf(time_int));
+			//Log.i("_CONVERTER_VAL : ", String.valueOf(time_int));
 		}
 		
 		return time_int;
@@ -49,7 +49,8 @@ public class JsonParser {
 		nameJsonFiles();
 		notes_object = getNotes();
 		///////////////// Remove this ///////////
-		Log.i("_JSON_PARSER_", "End of constructor");
+		/*
+		//Log.i("_JSON_PARSER_", "End of constructor");
 		for(int i = 0 ; i < notes_object.size(); i++)
 		{
 			try {
@@ -60,7 +61,7 @@ public class JsonParser {
 			}
 		}
 		
-		
+		*/
 		/////////////////////////////////////////
 		
 	}
@@ -79,7 +80,7 @@ public class JsonParser {
 		}
 		Log.i("_JSON_PARSER_", "FILE_NAME :"+file);
 		json = loadJSON(file);
-		Log.i("_JSON_PARSER_", "JSON_STR :"+json);
+		//Log.i("_JSON_PARSER_", "JSON_STR :"+json);
 		
 		try {
 			JSONArray json_root = new JSONArray(json);
@@ -127,7 +128,7 @@ public class JsonParser {
 		
 	}
 	
-	public String loadJSON(String filename) {
+	static public String loadJSON(String filename) {
 	    String json = null;
 	    try {
 

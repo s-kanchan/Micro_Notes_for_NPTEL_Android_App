@@ -21,6 +21,8 @@
     android:layout_height="2dp"
     android:background="#000000" />
  
+ 
+ 
  <TextView android:id="@+id/display_link"
  android:layout_width="wrap_content" 
  android:padding="10dp"
@@ -30,42 +32,78 @@
  android:layout_alignParentLeft="true"
  android:text="@string/sample_note" />
  
+ <!--  
  <TextView android:id="@+id/display_qtn"
  android:layout_width="wrap_content" android:layout_height="wrap_content"
  android:layout_below="@id/ScrollView01"
  android:layout_centerHorizontal="true"
- android:text="@string/sample_note" />
+ android:text="@string/sample_note" />  -->
  
- <TextView android:id="@+id/display_option1"
- android:layout_width="wrap_content" android:layout_height="wrap_content"
- android:layout_below="@id/display_qtn"
- android:layout_centerHorizontal="true"
- android:text="@string/sample_note" />
+ <RelativeLayout android:id="@+id/Option_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" 
+    android:layout_below="@id/ScrollView01">
  
- <TextView android:id="@+id/display_option2"
- android:layout_width="wrap_content" android:layout_height="wrap_content"
- android:layout_below="@id/display_option1"
- android:layout_centerHorizontal="true"
- android:text="@string/sample_note" />
+	<TextView android:id="@+id/display_option1"
+	android:layout_width="wrap_content" android:layout_height="wrap_content"
+	android:layout_alignParentLeft="true"
+	android:padding="5dp"
+	android:text="option1" />
  
- <TextView android:id="@+id/display_option3"
- android:layout_width="wrap_content" android:layout_height="wrap_content"
- android:layout_below="@id/display_option2"
- android:layout_centerHorizontal="true"
- android:text="@string/sample_note" />
+	<View android:id="@+id/divider2"
+	   android:layout_width="fill_parent"
+	   android:layout_below="@id/display_option1"
+	   android:layout_height="1dp"
+	   android:background="#000000" />
  
-  <TextView android:id="@+id/display_option4"
- android:layout_width="wrap_content" android:layout_height="wrap_content"
- android:layout_below="@id/display_option3"
- android:layout_centerHorizontal="true"
- android:text="@string/sample_note" />
+	<TextView android:id="@+id/display_option2"
+	android:layout_width="wrap_content" android:layout_height="wrap_content"
+	android:layout_below="@id/divider2"
+	android:layout_alignParentLeft="true"
+	android:padding="5dp"
+	android:text="option2" />
+ 
+	<View android:id="@+id/divider3"
+	   android:layout_width="fill_parent"
+	   android:layout_below="@id/display_option2"
+	   android:layout_height="1dp"
+	   android:background="#000000" />
+ 
+	<TextView android:id="@+id/display_option3"
+	android:layout_width="wrap_content" android:layout_height="wrap_content"
+	android:layout_below="@id/divider3"
+	android:layout_alignParentLeft="true"
+	android:padding="5dp"
+	android:text="option3" />
+ 
+	<View android:id="@+id/divider4"
+	   android:layout_width="fill_parent"
+	   android:layout_below="@id/display_option3"
+	   android:layout_height="1dp"
+	   android:background="#000000" />
+
+	<TextView android:id="@+id/display_option4"
+	android:layout_width="wrap_content" android:layout_height="wrap_content"
+	android:layout_below="@id/divider4"
+	android:layout_alignParentLeft="true"
+	android:padding="5dp"
+	android:text="option4" />
   
+	<View android:id="@+id/divider5"
+	  android:layout_width="fill_parent"
+	  android:layout_below="@id/display_option4"
+	  android:layout_height="1dp"
+	  android:background="#000000" />
+  
+  </RelativeLayout>
+ 
+ <!-- 
  <TextView android:id="@+id/display_cleaner"
  android:layout_width="wrap_content" android:layout_height="wrap_content"
  android:layout_below="@id/display_option4"
  android:layout_centerHorizontal="true"
  android:text="" />
-
+ -->
  <Button android:id="@+id/dialog_cancel" 
  android:layout_width="wrap_content" android:layout_height="wrap_content"
  android:layout_alignParentBottom="true"

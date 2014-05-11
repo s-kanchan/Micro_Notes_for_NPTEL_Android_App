@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.media.MediaPlayer.OnSeekCompleteListener;
@@ -26,6 +27,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.MediaController;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,11 +41,17 @@ public class Home extends Activity implements OnTouchListener{
 	JsonParser json_parser;
 	int note_index;
 	MediaController mediacontroller;
+	int no_of_try = 0;
 	//String VideoURL = "http://www.androidbegin.com/tutorial/AndroidCommercial.3gp";
 	String VideoURL;
 	static final String logTag = "ActivitySwipeDetector";
 	static final int MIN_DISTANCE = 100;
 	private float downX, downY, upX, upY;
+	
+	TextView disp_option1;
+    TextView disp_option2;
+    TextView disp_option3;
+    TextView disp_option4;
 	//private GestureDetector gestureDetector;
 	//private GestureListener gd;
 	
@@ -70,7 +78,7 @@ public class Home extends Activity implements OnTouchListener{
 		author_pic = (ImageView) findViewById(R.id.author_pic);
 		author_pic.setVisibility(View.GONE);
 		final Handler handler=new Handler();
-        final Toast toast = Toast.makeText(this, "hello", Toast.LENGTH_SHORT);
+        //final Toast toast = Toast.makeText(this, "hello", Toast.LENGTH_SHORT);
         
         author_pic.setOnClickListener(new OnClickListener() {
             @Override
@@ -148,6 +156,7 @@ public class Home extends Activity implements OnTouchListener{
             		@Override
 					public void onSeekComplete(MediaPlayer mp) {
 						// RESET note_index after a seek
+            			no_of_try = 0;
             			int curr_time = videoView.getCurrentPosition();
             			int note_time = 0;
             			note_index = 0;
@@ -251,7 +260,12 @@ public class Home extends Activity implements OnTouchListener{
 	public void onLeftToRightSwipe(){
 	    Log.i(logTag, "LeftToRightSwipe!");
 	    //Toast.makeText(Home.this,"left to right", Toast.LENGTH_SHORT).show();
-	    startActivity(new Intent(Home.this, CreateNote.class));
+	    //startActivity(new Intent(Home.this, CreateNote.class));
+	    Intent intent = new Intent();
+		intent.setClass(getApplicationContext(), CreateNote.class);
+		intent.putExtra("video", VideoURL);
+		intent.putExtra("time", videoView.getCurrentPosition()); 
+		startActivity(intent);
 	    overridePendingTransition(R.anim.enter_left_to_right, R.anim.leave_left_to_right);
 	    //activity.doSomething();
 	}
@@ -284,6 +298,7 @@ public class Home extends Activity implements OnTouchListener{
 	public void showNotesDialog()
 	{
 		 final Dialog dialog = new Dialog(Home.this);
+		 
          dialog.setContentView(R.layout.dialog_notes);
          dialog.setTitle("Note");
          
@@ -295,7 +310,7 @@ public class Home extends Activity implements OnTouchListener{
 			note_txt = json_parser.notes_object.get(note_index-1).getString("content");
 			ext_link = "Follow : " + json_parser.notes_object.get(note_index-1).getString("ext_links");	
 			note_type = json_parser.notes_object.get(note_index-1).getString("note_type");
-			Log.i("__HOME__", "NOTE : "+note_txt);
+			//Log.i("__HOME__", "NOTE : "+note_txt);
          } 
          catch (JSONException e) 
          {
@@ -314,11 +329,13 @@ public class Home extends Activity implements OnTouchListener{
 			}
          });
          TextView disp_note = (TextView) dialog.findViewById(R.id.display_note);
-         TextView disp_qtn = (TextView) dialog.findViewById(R.id.display_qtn);
-         TextView disp_option1 = (TextView) dialog.findViewById(R.id.display_option1);
-         TextView disp_option2 = (TextView) dialog.findViewById(R.id.display_option2);
-         TextView disp_option3 = (TextView) dialog.findViewById(R.id.display_option3);
-         TextView disp_option4 = (TextView) dialog.findViewById(R.id.display_option4);
+         //TextView disp_qtn = (TextView) dialog.findViewById(R.id.display_qtn);
+         disp_option1 = (TextView) dialog.findViewById(R.id.display_option1);
+         disp_option2 = (TextView) dialog.findViewById(R.id.display_option2);
+         disp_option3 = (TextView) dialog.findViewById(R.id.display_option3);
+         disp_option4 = (TextView) dialog.findViewById(R.id.display_option4);
+         
+         RelativeLayout option_view = (RelativeLayout) dialog.findViewById(R.id.Option_view);
          disp_note.setText(note_txt);
          TextView disp_link = (TextView) dialog.findViewById(R.id.display_link);
          disp_link.setText(ext_link);
@@ -326,15 +343,76 @@ public class Home extends Activity implements OnTouchListener{
          
          if(note_type.equalsIgnoreCase("mcq"))
          {
+        	 String qtn;
+        	 final String ans;
+        	 /*String opt1;
+        	 String opt2;
+        	 String opt3;
+        	 String opt4;*/
+        	 
+        	 // E.g. : "content": "If Sigma is the empty set, what is Sigma*\n@$#\nthe set containing only the empty string||the empty set||the empty string||none of the above",
+        	 String[] parts = note_txt.split("@\\$#");
+        	 Log.i("__PARTS__", "part1 : "+parts[0]);
+        	 Log.i("__PARTS__", "part2 : "+parts[1]);
+        	 String [] opts = parts[1].split("\\|\\|");
+        	 ans = opts[0];
+        	 Log.i("__PARTS__", "ANS : "+ans);
+        	 opts = shuffle(opts);
+        	 
+        	 disp_link.setVisibility(View.INVISIBLE);
+        	 disp_note.setText(parts[0]);
+        	 disp_option1.setText("* "+opts[0]);
+        	 Log.i("__PARTS__", "CHK1");
+        	 disp_option2.setText("* "+opts[1]);
+        	 Log.i("__PARTS__", "CHK2");
+        	 disp_option3.setText("* "+opts[2]);
+        	 disp_option4.setText("* "+opts[3]);
+        	 
+        	 disp_option1.setOnClickListener(new OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                	 no_of_try++;
+                	 show_answer(disp_option1, ans, no_of_try);
+                 }
+             });
+        	 
+        	 disp_option2.setOnClickListener(new OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                	 no_of_try++;
+                	 show_answer(disp_option2, ans, no_of_try);
+                 }
+             });
+        	 
+        	 disp_option3.setOnClickListener(new OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                	 no_of_try++;
+                	 show_answer(disp_option3, ans, no_of_try);
+                 }
+             });
+        	 
+        	 disp_option4.setOnClickListener(new OnClickListener() {
+                 @Override
+                 public void onClick(View v) {
+                	 no_of_try++;
+                	 show_answer(disp_option4, ans, no_of_try);
+                 }
+             });
+        	 
+        	 
+        	 
+        	 
         	 
          }
          else
          {
-        	 disp_qtn.setVisibility(View.INVISIBLE);
-        	 disp_option1.setVisibility(View.INVISIBLE);
+        	 option_view.setVisibility(View.INVISIBLE);
+        	 //disp_qtn.setVisibility(View.INVISIBLE);
+        	 /* disp_option1.setVisibility(View.INVISIBLE);
         	 disp_option2.setVisibility(View.INVISIBLE);
         	 disp_option3.setVisibility(View.INVISIBLE);
-        	 disp_option4.setVisibility(View.INVISIBLE);
+        	 disp_option4.setVisibility(View.INVISIBLE); */
          }
          
          button.setOnClickListener(new OnClickListener() {
@@ -345,6 +423,40 @@ public class Home extends Activity implements OnTouchListener{
              }
          });
          dialog.show();
+	}
+
+	protected void show_answer(TextView disp_option, String ans, int no_of_try) {
+		if(no_of_try == 1)
+		{
+			ans = "* "+ans;
+			Log.i("__SHOW_ANS__","ans : "+ans);
+			
+			if(String.valueOf(disp_option.getText()).equalsIgnoreCase(ans))
+			{
+				disp_option.setTextColor(Color.GREEN);
+			}
+			else
+			{
+				disp_option.setTextColor(Color.RED);
+			}
+			
+			if(String.valueOf(disp_option1.getText()).equalsIgnoreCase(ans))
+				disp_option1.setTextColor(Color.GREEN);
+			else if(String.valueOf(disp_option2.getText()).equalsIgnoreCase(ans))
+				disp_option2.setTextColor(Color.GREEN);
+			else if(String.valueOf(disp_option3.getText()).equalsIgnoreCase(ans))
+				disp_option3.setTextColor(Color.GREEN);
+			else if(String.valueOf(disp_option4.getText()).equalsIgnoreCase(ans))
+				disp_option4.setTextColor(Color.GREEN);
+		}
+		
+	}
+	
+
+	private String[] shuffle(String[] opts) {
+		// TODO Auto-generated method stub
+		//String [] ret_opts = null;
+		return opts;
 	}
 	
 	

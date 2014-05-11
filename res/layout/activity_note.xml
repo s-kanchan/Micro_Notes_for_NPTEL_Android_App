@@ -1,9 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/create_note"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#111"
-    android:orientation="vertical" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/create_note_view"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-</LinearLayout>
+    <RelativeLayout android:id="@+id/FormView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/create_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:padding="10dp"
+            android:text="Create Note"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/create_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/create_title"
+            android:layout_centerHorizontal="true"
+            android:ems="10"
+            android:hint="author"
+            android:textSize="@dimen/activity_horizontal_margin"
+            android:width="500dp" >
+
+            <requestFocus />
+            </EditText>
+            
+          <EditText
+              android:id="@+id/create_content"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/create_author"
+              android:layout_centerHorizontal="true"
+              android:ems="10"
+              android:hint="Description"
+              android:width="500dp" >
+
+            <requestFocus />
+         </EditText>
+         
+          <EditText
+              android:id="@+id/create_links"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_below="@id/create_content"
+              android:layout_centerHorizontal="true"
+              android:ems="10"
+              android:hint="External links"
+              android:width="500dp" >
+
+            <requestFocus />
+         </EditText>
+
+          <Button
+              android:id="@+id/create_button"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentBottom="true"
+              android:layout_below="@id/create_links"
+              android:layout_centerHorizontal="true"
+              android:text="Create" />
+        
+    </RelativeLayout>
+
+</ScrollView>

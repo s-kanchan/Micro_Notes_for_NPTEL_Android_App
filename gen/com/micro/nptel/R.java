@@ -36,22 +36,31 @@ public final class R {
         public static final int splash=0x7f020002;
     }
     public static final class id {
-        public static final int ScrollView01=0x7f090006;
+        public static final int FormView=0x7f090006;
+        public static final int Option_view=0x7f090010;
+        public static final int ScrollView01=0x7f09000c;
         public static final int about_us=0x7f090000;
-        public static final int action_settings=0x7f090011;
+        public static final int action_settings=0x7f09001a;
         public static final int activity_chat=0x7f090001;
         public static final int author_pic=0x7f090004;
-        public static final int create_note=0x7f090005;
-        public static final int dialog_cancel=0x7f090010;
-        public static final int display_cleaner=0x7f09000f;
-        public static final int display_link=0x7f090009;
-        public static final int display_note=0x7f090007;
-        public static final int display_option1=0x7f09000b;
-        public static final int display_option2=0x7f09000c;
-        public static final int display_option3=0x7f09000d;
-        public static final int display_option4=0x7f09000e;
-        public static final int display_qtn=0x7f09000a;
-        public static final int divider1=0x7f090008;
+        public static final int create_author=0x7f090008;
+        public static final int create_button=0x7f09000b;
+        public static final int create_content=0x7f090009;
+        public static final int create_links=0x7f09000a;
+        public static final int create_note_view=0x7f090005;
+        public static final int create_title=0x7f090007;
+        public static final int dialog_cancel=0x7f090019;
+        public static final int display_link=0x7f09000f;
+        public static final int display_note=0x7f09000d;
+        public static final int display_option1=0x7f090011;
+        public static final int display_option2=0x7f090013;
+        public static final int display_option3=0x7f090015;
+        public static final int display_option4=0x7f090017;
+        public static final int divider1=0x7f09000e;
+        public static final int divider2=0x7f090012;
+        public static final int divider3=0x7f090014;
+        public static final int divider4=0x7f090016;
+        public static final int divider5=0x7f090018;
         public static final int nptel_video=0x7f090003;
         public static final int playerLayout=0x7f090002;
     }
